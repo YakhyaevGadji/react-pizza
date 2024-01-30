@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Catigories from "../Components/Categories/Categories";
 import PizzaBloks from "../Components/PizzaBloks/PizzaBloks";
 import Sort from "../Components/Sort/Sort";
 import Skeleton from "../Components/PizzaBloks/Skeleton";
 import Pagination from "../Components/Pagination/Pagination";
+import { SearchContext } from "../App/App";
 
-const Catalog = ({searchValue}) => {
+const Catalog = () => {
+    const {searchValue} = useContext(SearchContext);
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categoriId, setCategoriId] = useState(0);
@@ -14,8 +16,6 @@ const Catalog = ({searchValue}) => {
         name: 'популярности',
         sort: 'rating'
     });
-
-    console.log(searchValue);
 
     useEffect(() => {
         setIsLoading(true);
