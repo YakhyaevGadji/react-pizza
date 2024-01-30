@@ -9,6 +9,7 @@ const Catalog = ({searchValue}) => {
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categoriId, setCategoriId] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [sort, setSort] = useState({
         name: 'популярности',
         sort: 'rating'
@@ -22,7 +23,7 @@ const Catalog = ({searchValue}) => {
         const order = sort.sort.includes('-') ? 'asc' : 'desc';
         const serach = searchValue ? `&search=${searchValue}` : searchValue;
 
-        fetch(`https://65ad515fadbd5aa31be090e6.mockapi.io/items?${
+        fetch(`https://65ad515fadbd5aa31be090e6.mockapi.io/items?page=${currentPage}&limit=4&${
             categoriId > 0 ? `category=${categoriId}` : ''
         }&sortBy=${sort.sort.replace('-', '')}&order=${order}${serach}`).then((res) => {
             return res.json();
@@ -32,7 +33,7 @@ const Catalog = ({searchValue}) => {
         });
 
         window.scrollTo(0, 0);
-    }, [categoriId, sort, searchValue]);
+    }, [categoriId, sort, currentPage, searchValue]);
 
     return (
         <div className="container">
@@ -42,14 +43,8 @@ const Catalog = ({searchValue}) => {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
-                {isLoading && [...new Array(6)].map((_, index) => <Skeleton key={index}/>)}
-                {items && items.filter(obj => {
-                    if(obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
-                        return true;
-                    }else {
-                        return false;
-                    }
-                }).map((obj, index) => {
+                {isLoading ? [...new Array(6)].map((_, index) => <Skeleton key={index}/>) :
+                items.map((obj, index) => {
                     return <PizzaBloks 
                         key={index} 
                         id={obj.id} 
@@ -61,7 +56,7 @@ const Catalog = ({searchValue}) => {
                     />
                 })}
             </div>
-            <Pagination/>
+            <Pagination setCurrentPage={(id) => setCurrentPage(id)}/>
         </div>
     );
 };
