@@ -7,7 +7,7 @@ import Pagination from "../Components/Pagination/Pagination";
 import { SearchContext } from "../App/App";
 
 const Catalog = () => {
-    const {searchValue} = useContext(SearchContext);
+    const {searchValue} = useContext(SearchContext);    
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categoriId, setCategoriId] = useState(0);
