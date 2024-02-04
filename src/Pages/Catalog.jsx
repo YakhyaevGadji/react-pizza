@@ -5,12 +5,17 @@ import Sort from "../Components/Sort/Sort";
 import Skeleton from "../Components/PizzaBloks/Skeleton";
 import Pagination from "../Components/Pagination/Pagination";
 import { SearchContext } from "../App/App";
+import { useSelector } from "react-redux";
 
 const Catalog = () => {
+    const categoriId = useSelector(state => state.filter.categoryId);
+
+    console.log(categoriId);
+    
     const {searchValue} = useContext(SearchContext);    
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [categoriId, setCategoriId] = useState(0);
+    // const [categoriId, setCategoriId] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [sort, setSort] = useState({
         name: 'популярности',
