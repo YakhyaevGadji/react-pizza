@@ -5,13 +5,12 @@ import Sort from "../Components/Sort/Sort";
 import Skeleton from "../Components/PizzaBloks/Skeleton";
 import Pagination from "../Components/Pagination/Pagination";
 import { SearchContext } from "../App/App";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryId } from '../redux/slices/filterSlice'
 
 const Catalog = () => {
+    const dispatch = useDispatch();
     const categoriId = useSelector(state => state.filter.categoryId);
-
-    console.log(categoriId);
-    
     const {searchValue} = useContext(SearchContext);    
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +20,11 @@ const Catalog = () => {
         name: 'популярности',
         sort: 'rating'
     });
+
+    const onClickCatregori = (id) => {
+        console.log(id);
+        dispatch(setCategoryId(id));
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -43,7 +47,7 @@ const Catalog = () => {
     return (
         <div className="container">
             <div className="content__top">
-                <Catigories value={categoriId} onClickCatregori={(id) => setCategoriId(id)}/>
+                <Catigories value={categoriId} onClickCatregori={onClickCatregori}/>
                 <Sort value={sort} onClickSort={(id) => setSort(id)}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
