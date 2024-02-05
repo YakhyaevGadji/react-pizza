@@ -1,5 +1,4 @@
 const Catigories = ({value, onClickCatregori}) => {
-    console.log('value:', value, 'onclick: ', onClickCatregori)
     const productNames = ['Все', 'Мясные', 'Вегетарианское', 'Гриль', 'Острые', 'Закрытые'];
 
     return (

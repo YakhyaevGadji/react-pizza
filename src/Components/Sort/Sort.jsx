@@ -1,18 +1,23 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSort } from "../../redux/slices/filterSlice";
 
-const Sort = ({value, onClickSort}) => {
+const Sort = () => {
+    const dispatch = useDispatch();
+    const sort = useSelector(state => state.filter.sort);
+
     const [activeSort, setActiveSort] = useState(false);
     const sorts = [
-        {name: 'популярности (DESC)', sort: 'rating'},
-        {name: 'популярности (ASC)', sort: '-rating'},
-        {name: 'цена (DESC)', sort: 'price'},
-        {name: 'цена (ASC)', sort: '-price'},
-        {name: 'алфовиту (DESC)', sort: 'title'},
-        {name: 'алфовиту (ASC)', sort: '-title'}
+        {name: 'популярности (DESC)', sortProperty: 'rating'},
+        {name: 'популярности (ASC)', sortProperty: '-rating'},
+        {name: 'цена (DESC)', sortProperty: 'price'},
+        {name: 'цена (ASC)', sortProperty: '-price'},
+        {name: 'алфовиту (DESC)', sortProperty: 'title'},
+        {name: 'алфовиту (ASC)', sortProperty: '-title'}
     ];
-    // 'популярности', 'цене', 'алфавиту'
-    const onClickFuncSort = (name) => {
-        onClickSort(name);
+    
+    const onClickFuncSort = (obj) => {
+        dispatch(setSort(obj));
         setActiveSort(false);
     };
 
@@ -28,7 +33,7 @@ const Sort = ({value, onClickSort}) => {
                 />
                 <b>Сортировка по:</b>
                 <span onClick={() => setActiveSort(!activeSort)}>
-                    {value.name}
+                    {sort.name}
                 </span>
             </div>
             {activeSort && (
@@ -36,7 +41,7 @@ const Sort = ({value, onClickSort}) => {
                     <ul>
                         {sorts.map((obj, index) => {
                             return (
-                                <li onClick={() => onClickFuncSort(obj)} className={value.sort === obj.sort ? 'active' : ''} key={index}>{obj.name}</li>
+                                <li onClick={() => onClickFuncSort(obj)} className={sort.sortProperty === obj.sortProperty ? 'active' : ''} key={index}>{obj.name}</li>
                             );
                         })}
                         

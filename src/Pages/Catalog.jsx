@@ -11,30 +11,30 @@ import { setCategoryId } from '../redux/slices/filterSlice'
 const Catalog = () => {
     const dispatch = useDispatch();
     const categoriId = useSelector(state => state.filter.categoryId);
+    const sort = useSelector(state => state.filter.sort.sortProperty);
+
+
     const {searchValue} = useContext(SearchContext);    
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    // const [categoriId, setCategoriId] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [sort, setSort] = useState({
-        name: 'популярности',
-        sort: 'rating'
-    });
-
+  
     const onClickCatregori = (id) => {
-        console.log(id);
         dispatch(setCategoryId(id));
     };
 
     useEffect(() => {
         setIsLoading(true);
 
-        const order = sort.sort.includes('-') ? 'asc' : 'desc';
+        console.log(sort);
+        const order = sort.includes('-') ? 'asc' : 'desc';
+        
+        
         const serach = searchValue ? `&search=${searchValue}` : searchValue;
 
         fetch(`https://65ad515fadbd5aa31be090e6.mockapi.io/items?page=${currentPage}&limit=4&${
             categoriId > 0 ? `category=${categoriId}` : ''
-        }&sortBy=${sort.sort.replace('-', '')}&order=${order}${serach}`).then((res) => {
+        }&sortBy=${sort.replace('-', '')}&order=${order}${serach}`).then((res) => {
             return res.json();
         }).then((data) => {
             setItems(data);
@@ -48,7 +48,7 @@ const Catalog = () => {
         <div className="container">
             <div className="content__top">
                 <Catigories value={categoriId} onClickCatregori={onClickCatregori}/>
-                <Sort value={sort} onClickSort={(id) => setSort(id)}/>
+                <Sort/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
