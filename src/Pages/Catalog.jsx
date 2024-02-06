@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import Catigories from "../Components/Categories/Categories";
 import PizzaBloks from "../Components/PizzaBloks/PizzaBloks";
 import Sort from "../Components/Sort/Sort";
@@ -26,18 +27,12 @@ const Catalog = () => {
     useEffect(() => {
         setIsLoading(true);
 
-        console.log(sort);
         const order = sort.includes('-') ? 'asc' : 'desc';
-        
-        
         const serach = searchValue ? `&search=${searchValue}` : searchValue;
 
-        fetch(`https://65ad515fadbd5aa31be090e6.mockapi.io/items?page=${currentPage}&limit=4&${
-            categoriId > 0 ? `category=${categoriId}` : ''
-        }&sortBy=${sort.replace('-', '')}&order=${order}${serach}`).then((res) => {
-            return res.json();
-        }).then((data) => {
-            setItems(data);
+        axios.get(`https://65ad515fadbd5aa31be090e6.mockapi.io/items?page=${currentPage}&limit=4&${categoriId > 0 ? `category=${categoriId}` : ''}&sortBy=${sort.replace('-', '')}&order=${order}${serach}`)
+        .then((res) => {
+            setItems(res.data);
             setIsLoading(false);
         });
 
