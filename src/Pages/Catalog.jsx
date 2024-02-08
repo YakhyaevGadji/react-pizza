@@ -7,10 +7,14 @@ import Skeleton from "../Components/PizzaBloks/Skeleton";
 import Pagination from "../Components/Pagination/Pagination";
 import { SearchContext } from "../App/App";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategoryId } from '../redux/slices/filterSlice'
+import { setCategoryId } from '../redux/slices/filterSlice';
+import qs from 'qs';
+import { useNavigate } from "react-router";
 
 const Catalog = () => {
     const dispatch = useDispatch();
+    const usenavigate = useNavigate();
+
     const categoriId = useSelector(state => state.filter.categoryId);
     const sort = useSelector(state => state.filter.sort.sortProperty);
 
@@ -37,6 +41,18 @@ const Catalog = () => {
         });
 
         window.scrollTo(0, 0);
+    }, [categoriId, sort, currentPage, searchValue]);
+
+    useEffect(() => {
+
+        const queryString = qs.stringify({
+            sortProperty: sort,
+            categoriId,
+            currentPage
+        });
+
+        usenavigate(`?${queryString}`);
+
     }, [categoriId, sort, currentPage, searchValue]);
 
     return (
