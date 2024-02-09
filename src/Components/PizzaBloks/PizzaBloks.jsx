@@ -4,6 +4,9 @@ import { addItem } from '../../redux/slices/cartSlice';
 
 const PizzaBloks = ({ id, title, imgUrl, types, sizes, price }) => {
     const dispatch = useDispatch();
+    const cartItem = useSelector(state => state.cart.items.find((obj) => obj.id === id));
+
+    const addedCount = cartItem ? cartItem.count : 0;
     
     const [activeType, setActiveType] = useState(0);
     const [activeSize, setActiveSize] = useState(0);
@@ -19,7 +22,7 @@ const PizzaBloks = ({ id, title, imgUrl, types, sizes, price }) => {
             type: activeType,
             size: activeSize
         };
-        console.log(items);
+        console.log(item);
         dispatch(addItem(item));
     }
 
@@ -55,7 +58,7 @@ const PizzaBloks = ({ id, title, imgUrl, types, sizes, price }) => {
                         xmlns="http://www.w3.org/2000/svg"
                     ></svg>
                     <span>Добавить</span>
-                    <i>2</i>
+                    {addedCount > 0 && <i>{addedCount}</i>}
                 </button>
             </div>
         </div>
