@@ -22,7 +22,7 @@ const PizzaBloks = ({ id, title, imgUrl, types, sizes, price }) => {
             type: activeType,
             size: activeSize
         };
-        console.log(item);
+        
         dispatch(addItem(item));
     }
 
