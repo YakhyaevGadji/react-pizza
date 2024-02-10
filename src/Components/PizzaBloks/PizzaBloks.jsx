@@ -19,9 +19,11 @@ const PizzaBloks = ({ id, title, imgUrl, types, sizes, price }) => {
             title,
             price,
             imgUrl,
-            type: activeType,
-            size: activeSize
+            type: typeNames[activeType],
+            size: sizes[activeSize]
         };
+
+        console.log(imgUrl);
         
         dispatch(addItem(item));
     }
