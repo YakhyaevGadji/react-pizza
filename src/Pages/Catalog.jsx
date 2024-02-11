@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import Catigories from "../Components/Categories/Categories";
 import PizzaBloks from "../Components/PizzaBloks/PizzaBloks";
 import Sort from "../Components/Sort/Sort";
@@ -10,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCategoryId } from '../redux/slices/filterSlice';
 import qs from 'qs';
 import { useNavigate } from "react-router";
-import { setItems } from "../redux/slices/pizzasSlice";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
 
 const Catalog = () => {
     const dispatch = useDispatch();
@@ -18,7 +17,7 @@ const Catalog = () => {
 
     const categoriId = useSelector(state => state.filter.categoryId);
     const sort = useSelector(state => state.filter.sort.sortProperty);
-    const items = useSelector(state => state.pizza.items);
+    const { items, status } = useSelector(state => state.pizza);
 
 
     const {searchValue} = useContext(SearchContext);   
@@ -29,30 +28,26 @@ const Catalog = () => {
         dispatch(setCategoryId(id));
     };
 
-    const fetchPizzas = async () => {
+    const getPizzas = async () => {
         setIsLoading(true);
 
         const order = sort.includes('-') ? 'asc' : 'desc';
         const serach = searchValue ? `&search=${searchValue}` : searchValue;
 
-        try {
-            const res = await axios.get(
-                `https://65ad515fadbd5aa31be090e6.mockapi.io/items?page=${currentPage}&limit=4&${categoriId > 0 ? `category=${categoriId}` : ''}&sortBy=${sort.replace('-', '')}&order=${order}${serach}`
-            );
-            dispatch(setItems(res.data));
-            setIsLoading(false);
-        } catch (error) {
-            console.log(error);
-            setIsLoading(false);
-        }
-    
+        
+        dispatch(fetchPizzas({
+            order,
+            serach,
+            sort,
+            categoriId,
+            currentPage
+        }));
+
         window.scrollTo(0, 0);
     };
 
     useEffect(() => {
-        if(window.location.search) {
-            fetchPizzas();
-        }
+        getPizzas();
     }, [categoriId, sort, currentPage, searchValue]);
 
     useEffect(() => {
@@ -74,8 +69,9 @@ const Catalog = () => {
                 <Sort/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
-            <div className="content__items">
-                {isLoading ? [...new Array(6)].map((_, index) => <Skeleton key={index}/>) :
+            {
+                status === 'error' ? <div>Error to fetch</div> :<div className="content__items">
+                {status === 'loading' ? [...new Array(6)].map((_, index) => <Skeleton key={index}/>) :
                 items.map((obj, index) => {
                     return <PizzaBloks 
                         key={index} 
@@ -88,6 +84,8 @@ const Catalog = () => {
                     />
                 })}
             </div>
+            }
+            
             <Pagination setCurrentPage={(id) => setCurrentPage(id)}/>
         </div>
     );
